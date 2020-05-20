@@ -1,0 +1,15 @@
+{ 
+  "name": "testcontainers-extensions",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/homecentr/testcontainers-extensions.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/homecentr/testcontainers-extensions/issues"
+  },
+  "homepage": "https://github.com/homecentr/testcontainers-extensions#readme"
+}
