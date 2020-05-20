@@ -1,5 +1,8 @@
 package io.homecentr.testcontainers.containers;
 
+import io.homecentr.testcontainers.images.ImageTagResolver;
+import io.homecentr.testcontainers.images.SystemWrapper;
+import io.homecentr.testcontainers.images.SystemWrapperImpl;
 import org.jetbrains.annotations.NotNull;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.OutputFrame;
@@ -10,6 +13,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends GenericContainer<SELF> {
+
+    public GenericContainerEx(ImageTagResolver resolver) {
+        super(resolver.getImageTag());
+    }
+
     public GenericContainerEx(String imageTag) {
         super(imageTag);
     }

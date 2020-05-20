@@ -15,9 +15,9 @@ public class ImageTagResolverShould {
         when(system.getProperty(anyString())).thenReturn("prop-tag");
         when(system.getenv(anyString())).thenReturn("env-var-tag");
 
-        ImageTagResolver resolver = new ImageTagResolverImpl(system);
+        ImageTagResolver resolver = new EnvironmentImageTagResolver(system, "fallback-value");
 
-        assertEquals("prop-tag", resolver.getImageTag("fallback-value"));
+        assertEquals("prop-tag", resolver.getImageTag());
     }
 
     @Test
@@ -27,9 +27,9 @@ public class ImageTagResolverShould {
         when(system.getProperty(anyString())).thenReturn(null);
         when(system.getenv(anyString())).thenReturn("env-var-tag");
 
-        ImageTagResolver resolver = new ImageTagResolverImpl(system);
+        ImageTagResolver resolver = new EnvironmentImageTagResolver(system, "fallback-value");
 
-        assertEquals("env-var-tag", resolver.getImageTag("fallback-value"));
+        assertEquals("env-var-tag", resolver.getImageTag());
     }
 
     @Test
@@ -39,8 +39,8 @@ public class ImageTagResolverShould {
         when(system.getProperty(anyString())).thenReturn(null);
         when(system.getenv(anyString())).thenReturn(null);
 
-        ImageTagResolver resolver = new ImageTagResolverImpl(system);
+        ImageTagResolver resolver = new EnvironmentImageTagResolver(system, "fallback-value");
 
-        assertEquals("fallback-value", resolver.getImageTag("fallback-value"));
+        assertEquals("fallback-value", resolver.getImageTag());
     }
 }

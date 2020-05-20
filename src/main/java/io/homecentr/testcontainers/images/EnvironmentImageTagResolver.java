@@ -1,17 +1,20 @@
 package io.homecentr.testcontainers.images;
 
-public class ImageTagResolverImpl implements ImageTagResolver {
+public class EnvironmentImageTagResolver implements ImageTagResolver {
     private final SystemWrapper _systemWrapper;
+    private final String _fallbackValue;
 
-    protected ImageTagResolverImpl(SystemWrapper systemWrapper) {
+    protected EnvironmentImageTagResolver(SystemWrapper systemWrapper, String fallbackValue) {
         _systemWrapper = systemWrapper;
+        _fallbackValue = fallbackValue;
     }
 
-    public ImageTagResolverImpl() {
+    public EnvironmentImageTagResolver(String fallbackValue) {
+        _fallbackValue = fallbackValue;
         _systemWrapper = new SystemWrapperImpl();
     }
 
-    public String getImageTag(String fallbackValue) {
+    public String getImageTag() {
         String property = _systemWrapper.getProperty("docker_image_tag");
 
         if(property != null && !property.isEmpty()) {
@@ -24,6 +27,6 @@ public class ImageTagResolverImpl implements ImageTagResolver {
             return envVar;
         }
 
-        return fallbackValue;
+        return _fallbackValue;
     }
 }
