@@ -1,5 +1,5 @@
 plugins{
-    id 'com.jfrog.bintray' version '1.8.4'
+    id 'com.jfrog.bintray' version '1.8.5'
     id 'java-library'
     id 'idea'
     id 'maven-publish'
@@ -20,7 +20,7 @@ repositories{
 }
 
 dependencies{
-    implementation "org.testcontainers:testcontainers:1.14.1"
+    implementation "org.testcontainers:testcontainers:1.14.2"
 
     testImplementation group: 'junit', name: 'junit', version: '4.13'
 
