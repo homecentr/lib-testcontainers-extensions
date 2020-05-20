@@ -1,16 +1,13 @@
 package io.homecentr.testcontainers.containers;
 
 import io.homecentr.testcontainers.images.ImageTagResolver;
-import io.homecentr.testcontainers.images.SystemWrapper;
-import io.homecentr.testcontainers.images.SystemWrapperImpl;
 import org.jetbrains.annotations.NotNull;
+import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.OutputFrame;
-import org.testcontainers.shaded.org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.nio.file.Paths;
 
 public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends GenericContainer<SELF> {
 
@@ -20,6 +17,16 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
 
     public GenericContainerEx(String imageTag) {
         super(imageTag);
+    }
+
+    public GenericContainerEx<SELF> withRelativeFileSystemBind(String relativePath, String containerPath) {
+        return withRelativeFileSystemBind(relativePath, containerPath, BindMode.READ_WRITE);
+    }
+
+    public GenericContainerEx<SELF> withRelativeFileSystemBind(String relativePath, String containerPath, BindMode bindMode) {
+        String fullHostPath = Paths.get(System.getProperty("user.dir"), relativePath).normalize().toString();
+
+        return withFileSystemBind(fullHostPath, containerPath, bindMode);
     }
 
     public Integer getProcessUid(String processName) throws IOException, InterruptedException, ProcessNotFoundException {
