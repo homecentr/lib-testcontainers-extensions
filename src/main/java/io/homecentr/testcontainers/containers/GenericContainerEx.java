@@ -30,25 +30,25 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
     }
 
     public Integer getProcessUid(String processName) throws IOException, InterruptedException, ProcessNotFoundException {
-        ExecResult result = executeShellCommand("stat -c '%u' /proc/$(ps axf | grep '"+ processName +"' | grep -v grep | awk '{print $1}')");
+        ExecResult result = executeShellCommand("stat -c '%u' /proc/$(ps axf | grep '"+ processName +"' | grep -v grep |  awk -v def=\"not-found\" '{ print $1 } END { if(NR==0) {print def} }')");
 
-        String output = result.getStdout().trim();
-
-        if(output.isEmpty() || output.equals("0")) {
+        if(result.getExitCode() != 0) {
             throw new ProcessNotFoundException(processName);
         }
+
+        String output = result.getStdout().trim();
 
         return Integer.parseInt(output);
     }
 
     public Integer getProcessGid(String processName) throws IOException, InterruptedException, ProcessNotFoundException {
-        ExecResult result = executeShellCommand("stat -c '%g' /proc/$(ps axf | grep '"+ processName +"' | grep -v grep | awk '{print $1}')");
+        ExecResult result = executeShellCommand("stat -c '%g' /proc/$(ps axf | grep '"+ processName +"' | grep -v grep |  awk -v def=\"not-found\" '{ print $1 } END { if(NR==0) {print def} }')");
 
-        String output = result.getStdout().trim();
-
-        if(output.isEmpty() || output.equals("0")) {
+        if(result.getExitCode() != 0) {
             throw new ProcessNotFoundException(processName);
         }
+
+        String output = result.getStdout().trim();
 
         return Integer.parseInt(output);
     }
