@@ -59,6 +59,12 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
         return new LogAnalyzer(logs);
     }
 
+    public LogAnalyzer getLogsAnalyzer() {
+        String logs = this.getLogs();
+
+        return new LogAnalyzer(logs);
+    }
+
     @NotNull
     private String getShellExecutable() throws IOException, InterruptedException {
         if(this.execInContainer("which", "bash").getExitCode() == 0) {
