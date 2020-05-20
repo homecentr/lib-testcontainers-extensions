@@ -1,0 +1,39 @@
+name: CI/CD on master
+on:
+  push:
+    branches:
+      - master
+
+env:
+  BINTRAY_REPO: maven
+  BINTRAY_ORG: homecentr
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Set up java for tests execution
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: "Determine release version"
+        uses: codfish/semantic-release-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_URL: "https://api.github.com"
+
+      - name: Gradle - build
+        run: gradle build
+
+      - name: Gradle - test
+        run: gradle test
+
+      - name: Gradle - publish to bintray
+        if: env.RELEASE_VERSION != ''
+        run: gradle bintrayUpload
+        env:
+          BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+          BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}

@@ -1,91 +1,89 @@
-plugins {
-    id 'java'
+plugins{
+    id 'com.jfrog.bintray' version '1.8.4'
+    id 'java-library'
     id 'idea'
-    id 'eclipse'
     id 'maven-publish'
-    id 'com.jfrog.bintray' version '1.8.0'
+    id 'maven'
 }
 
-group = "io.homecentr"
-description = "Extensions for testcontainers library."
-version = System.getenv('CI_COMMIT_REF_NAME')
+group = 'io.homecentr'
 
 sourceCompatibility = 1.8
 
-repositories {
+jar {
+    baseName = 'testcontainers-extensions'
+}
+
+repositories{
+    mavenCentral()
     jcenter()
 }
 
-dependencies {
-    // your dependencies
+dependencies{
+    implementation "org.testcontainers:testcontainers:1.14.1"
+
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
+
+    testCompile "org.mockito:mockito-core:3.3.3"
 }
 
-/**
- * Sources - build a jar with source files
- */
-task sourcesJar(type: Jar, dependsOn: classes, description: 'Builds the sourcesJar.', group: 'build') {
-    from sourceSets.main.allSource
+task sourcesJar(type: Jar, dependsOn: classes){
     classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
-// build a jar with javadoc
-task javadocJar(type: Jar, dependsOn: javadoc, description: 'Builds the javadocJar.', group: 'build') {
+task javadocJar(type: Jar, dependsOn: javadoc){
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
 
-/**
- * Artifacts
- */
-artifacts {
+artifacts{
     archives sourcesJar
     archives javadocJar
 }
 
-/**
- * Deployment
- */
-publishing {
-    publications {
-        mainProject(MavenPublication) {
-            from project.components.java
-            // artifact sourcesJar
-            // artifact javadocJar
-            groupId "io.homecentr" //project.group
-            artifactId "testcontainers-extensions" //project.name
-            version String.valueOf(project.version).replace("v", "")
-            // pom.withXml {
-            //     def root = asNode()
-            //     root.appendNode("description", project.description)
-            //     root.appendNode("name", "testcontainers-extensions") //project.name)
-            // }
+bintray{
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_API_KEY")
+    publications = ['TestContainersExtensions']
+    publish = true
+    
+    pkg{
+        repo = String.valueOf(System.getenv('BINTRAY_REPO')).toLowerCase()
+        userOrg = String.valueOf(System.getenv('BINTRAY_ORG')).toLowerCase()
+        name = 'testcontainers-extensions'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/homecentr/testcontainers-extensions.git'
+        websiteUrl = 'https://github.com/homecentr/testcontainers-extensions'
+        issueTrackerUrl = 'https://github.com/homecentr/testcontainers-extensions/issues'
+        publicDownloadNumbers = true
+
+        githubRepo = 'homecentr/testcontainers-extensions'
+        githubReleaseNotesFile = 'README.md'
+
+        version {
+            name = String.valueOf(System.getenv("RELEASE_VERSION")).replace("v", "")
+            vcsTag = String.valueOf(System.getenv("GITHUB_SHA")).toLowerCase()
+            released = new Date()
         }
     }
 }
 
-/**
- * Bintray Upload
- */
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_API_KEY')
-    publications = ['mainProject']
-    dryRun = false
-    publish = true
-    pkg {
-        // jcenter repository namespace and name
-        userOrg = 'homecentr' // String.valueOf(System.getenv('CI_PROJECT_NAMESPACE')).toLowerCase()
-        repo = 'maven'
-        name =  'testcontainers-extensions'
-        desc = project.description
-        licenses = ['MIT']
-        vcsUrl = System.getenv('CI_REPOSITORY_URL')
-        labels = []
-        publicDownloadNumbers = true
-        version {
-            name = String.valueOf(project.version).replace("v", "")
-            vcsTag = project.version
-            released  = new Date()
+publishing {
+    publications {
+        TestContainersExtensions(MavenPublication){
+            from components.java
+            groupId group
+            artifactId 'testcontainers-extensions'
+            version String.valueOf(System.getenv("RELEASE_VERSION")).replace("v", "")
+            artifact javadocJar
+            artifact sourcesJar
         }
+    }
+}
+
+test {
+    afterTest { desc, result ->
+        logger.quiet "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
     }
 }
