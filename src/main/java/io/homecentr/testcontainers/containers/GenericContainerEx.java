@@ -6,7 +6,12 @@ import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.OutputFrame;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends GenericContainer<SELF> {
@@ -17,6 +22,10 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
 
     public GenericContainerEx(String imageTag) {
         super(imageTag);
+    }
+
+    public GenericContainerEx<SELF> withRelativeFileSystemBind(Path path, String containerPath) {
+        return withRelativeFileSystemBind(path.toString(), containerPath);
     }
 
     public GenericContainerEx<SELF> withRelativeFileSystemBind(String relativePath, String containerPath) {
@@ -70,6 +79,21 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
         String logs = this.getLogs();
 
         return new LogAnalyzer(logs);
+    }
+
+    public HttpResponse makeHttpRequest(int port, String pathAndQuery) throws IOException {
+        return makeHttpRequest("http", port, pathAndQuery);
+    }
+
+    public HttpResponse makeHttpRequest(String protocol, int port, String pathAndQuery) throws IOException {
+        int mappedPort = getMappedPort(port);
+        URL target = new URL(String.format("%s://%s:%d%s", protocol, getContainerIpAddress(), mappedPort, pathAndQuery));
+
+        HttpURLConnection connection = (HttpURLConnection)target.openConnection();
+
+        connection.connect();
+
+        return new HttpResponse(connection);
     }
 
     @NotNull
