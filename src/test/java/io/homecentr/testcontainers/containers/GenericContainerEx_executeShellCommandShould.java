@@ -24,7 +24,7 @@ public class GenericContainerEx_executeShellCommandShould {
 
     @Test
     public void executeCommandUsingBashWhenRunningInBashBasedContainer() throws IOException, InterruptedException {
-        _container = new GenericContainerEx<>("ubuntu:xenial").withCommand("bash", "-c", "sleep 100s");
+        _container = new GenericContainerEx<>("centos").withCommand("bash", "-c", "sleep 100s");
         _container.start();
         _container.followOutput(new Slf4jLogConsumer(logger));
 

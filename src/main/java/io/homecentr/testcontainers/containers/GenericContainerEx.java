@@ -74,7 +74,7 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
 
     @NotNull
     private String getShellExecutable() throws IOException, InterruptedException {
-        if(this.execInContainer("which", "bash").getExitCode() == 0) {
+        if(this.execInContainer("bash", "--help").getExitCode() == 0) {
             return "bash";
         }
 
