@@ -50,4 +50,16 @@ public class GenericContainerEx_getProcessGidShould {
 
         _container.getProcessGid("not-existing");
     }
+
+    @Test
+    public void returnResultWhenProcessNameSubstringOfAnotherProcess() throws IOException, InterruptedException, ProcessNotFoundException {
+        _container = new GenericContainerEx<>("alpine").withCommand("ash", "-c", "sleep 1000");
+        _container.start();
+
+        _container.execInContainer("ash", "-c", "sleep 100 &");
+
+        int gid = _container.getProcessGid("sleep 100");
+
+        assertEquals(0, gid);
+    }
 }
