@@ -20,7 +20,7 @@ repositories{
 }
 
 dependencies{
-    implementation "org.testcontainers:testcontainers:1.14.2"
+    implementation "org.testcontainers:testcontainers:1.14.3"
 
     testImplementation group: 'junit', name: 'junit', version: '4.13'
 
