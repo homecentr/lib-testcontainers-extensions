@@ -34,3 +34,5 @@ jobs:
       - name: Gradle - publish to GitHub packages
         if: env.RELEASE_VERSION != ''
         run: gradle publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
