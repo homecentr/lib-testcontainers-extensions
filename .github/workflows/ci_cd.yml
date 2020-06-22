@@ -31,8 +31,9 @@ jobs:
       - name: Gradle - test
         run: gradle test
 
-      - name: Gradle - publish to GitHub packages
+      - name: Gradle - publish to bintray
         if: env.RELEASE_VERSION != ''
-        run: gradle publish
+        run: gradle bintrayUpload
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+          BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
