@@ -21,8 +21,7 @@ dependencies{
     implementation "org.testcontainers:testcontainers:1.14.3"
 
     testImplementation group: 'junit', name: 'junit', version: '4.13'
-
-    testCompile "org.mockito:mockito-core:3.4.6"
+    testImplementation group: 'org.mockito', name'mockito-core', version :'3.4.6'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes){
