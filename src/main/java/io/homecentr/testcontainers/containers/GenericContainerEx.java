@@ -3,12 +3,10 @@ package io.homecentr.testcontainers.containers;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
 import io.homecentr.testcontainers.images.ImageTagResolver;
-import org.jetbrains.annotations.NotNull;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.OutputFrame;
 import org.testcontainers.images.builder.ImageFromDockerfile;
-import org.testcontainers.shaded.com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -120,7 +118,6 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
         return Integer.parseInt(portMapping[0].getHostPortSpec());
     }
 
-    @NotNull
     private String getShellExecutable() throws IOException, InterruptedException {
         if(this.execInContainer("bash", "--help").getExitCode() == 0) {
             return "bash";

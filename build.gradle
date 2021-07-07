@@ -1,9 +1,7 @@
 plugins{
-    id 'com.jfrog.bintray' version '1.8.5'
     id 'java-library'
     id 'idea'
     id 'maven-publish'
-    id 'maven'
 }
 
 group = 'io.homecentr'
@@ -19,12 +17,11 @@ repositories{
     jcenter()
 }
 
-dependencies{
-    implementation "org.testcontainers:testcontainers:1.14.3"
+dependencies {
+    implementation group: 'org.testcontainers', name: 'testcontainers', version: '1.15.3'
 
     testImplementation group: 'junit', name: 'junit', version: '4.13'
-
-    testCompile "org.mockito:mockito-core:3.4.6"
+    testImplementation group: 'org.mockito', name: 'mockito-core', version :'3.4.6'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes){
@@ -42,42 +39,23 @@ artifacts{
     archives javadocJar
 }
 
-bintray{
-    user = System.getenv("BINTRAY_USER")
-    key = System.getenv("BINTRAY_API_KEY")
-    publications = ['TestContainersExtensions']
-    publish = true
-    
-    pkg{
-        repo = String.valueOf(System.getenv('BINTRAY_REPO')).toLowerCase()
-        userOrg = String.valueOf(System.getenv('BINTRAY_ORG')).toLowerCase()
-        name = 'testcontainers-extensions'
-        licenses = ['MIT']
-        vcsUrl = 'https://github.com/homecentr/testcontainers-extensions.git'
-        websiteUrl = 'https://github.com/homecentr/testcontainers-extensions'
-        issueTrackerUrl = 'https://github.com/homecentr/testcontainers-extensions/issues'
-        publicDownloadNumbers = true
-
-        githubRepo = 'homecentr/testcontainers-extensions'
-        githubReleaseNotesFile = 'README.md'
-
-        version {
-            name = String.valueOf(System.getenv("RELEASE_VERSION")).replace("v", "")
-            vcsTag = String.valueOf(System.getenv("GITHUB_SHA")).toLowerCase()
-            released = new Date()
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/homecentr/lib-testcontainers-extensions")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
         }
     }
-}
-
-publishing {
     publications {
-        TestContainersExtensions(MavenPublication){
-            from components.java
+        gpr(MavenPublication) {
+            from(components.java)
             groupId group
             artifactId 'testcontainers-extensions'
             version String.valueOf(System.getenv("RELEASE_VERSION")).replace("v", "")
-            artifact javadocJar
-            artifact sourcesJar
         }
     }
 }

@@ -4,12 +4,11 @@ on:
     branches:
       - master
 
-env:
-  BINTRAY_REPO: maven
-  BINTRAY_ORG: homecentr
-
 jobs:
   build:
+    permissions: 
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -25,15 +24,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_URL: "https://api.github.com"
 
-      - name: Gradle - build
-        run: gradle build
+      - name: Gradle - build & test
+        run: gradle build --info
 
-      - name: Gradle - test
-        run: gradle test
-
-      - name: Gradle - publish to bintray
+      - name: Gradle - publish to GitHub packages
         if: env.RELEASE_VERSION != ''
-        run: gradle bintrayUpload
+        run: gradle publish
         env:
-          BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
-          BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

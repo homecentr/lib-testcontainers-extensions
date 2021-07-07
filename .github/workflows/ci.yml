@@ -7,6 +7,8 @@ on:
 
 jobs:
   build:
+    permissions: 
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -17,7 +19,4 @@ jobs:
           java-version: 11
 
       - name: Gradle - build
-        run: gradle build
-
-      - name: Gradle - test
-        run: gradle test
+        run: gradle build --info
