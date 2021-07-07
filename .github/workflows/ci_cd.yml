@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     permissions: 
-      contents: read
+      contents: write # to allow pushing version tags
       packages: write
     runs-on: ubuntu-latest
     steps:
@@ -19,7 +19,7 @@ jobs:
           java-version: 11
 
       - name: "Determine release version"
-        uses: codfish/semantic-release-action@master
+        uses: docker://ghcr.io/codfish/semantic-release-action:v1.9.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_URL: "https://api.github.com"
