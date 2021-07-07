@@ -16,6 +16,7 @@ jobs:
       - name: Set up java for tests execution
         uses: actions/setup-java@v2.1.0
         with:
+          distribution: 'zulu'
           java-version: 11
 
       - name: "Determine release version"
