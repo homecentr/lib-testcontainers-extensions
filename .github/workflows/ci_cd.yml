@@ -24,13 +24,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_URL: "https://api.github.com"
 
-      - name: Gradle - build
-        run: gradle build
+      - name: Gradle - build & test
+        run: gradle build --info
 
-      - name: Gradle - test
-        run: gradle test
-
-      - name: Gradle - publish to bintray
+      - name: Gradle - publish to GitHub packages
         if: env.RELEASE_VERSION != ''
         run: gradle publish
         env:
