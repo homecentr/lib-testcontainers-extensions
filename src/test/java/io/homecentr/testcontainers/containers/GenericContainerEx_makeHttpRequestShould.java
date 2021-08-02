@@ -22,6 +22,7 @@ public class GenericContainerEx_makeHttpRequestShould {
             .withRelativeFileSystemBind(Paths.get("nginx", "localhost.crt"), "/etc/ssl/certs/localhost.crt")
             .withRelativeFileSystemBind(Paths.get("nginx", "localhost.key"), "/etc/ssl/private/localhost.key");
 
+        _nginxContainer.addExposedPort(80);
         _nginxContainer.addExposedPort(443);
 
         _nginxContainer.start();
