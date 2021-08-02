@@ -8,6 +8,7 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.OutputFrame;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -59,6 +60,30 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
 
         if(result.getExitCode() != 0) {
             throw new ProcessNotFoundException(processName);
+        }
+
+        String output = result.getStdout().trim();
+
+        return Integer.parseInt(output);
+    }
+
+    public Integer getFileOwnerUid(String filePath) throws IOException, InterruptedException {
+        ExecResult result = executeShellCommand("stat -c '%u' " + filePath);
+
+        if(result.getExitCode() != 0) {
+            throw new FileNotFoundException(filePath);
+        }
+
+        String output = result.getStdout().trim();
+
+        return Integer.parseInt(output);
+    }
+
+    public Integer getFileOwningGid(String filePath) throws IOException, InterruptedException {
+        ExecResult result = executeShellCommand("stat -c '%g' " + filePath);
+
+        if(result.getExitCode() != 0) {
+            throw new FileNotFoundException(filePath);
         }
 
         String output = result.getStdout().trim();
