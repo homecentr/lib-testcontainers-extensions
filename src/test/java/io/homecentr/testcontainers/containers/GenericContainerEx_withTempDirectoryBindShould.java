@@ -45,7 +45,7 @@ public class GenericContainerEx_withTempDirectoryBindShould {
 
         container.start();
 
-        Container.ExecResult result = container.executeShellCommand("ls -l / | grep lib | awk '{ print $1 }'");
+        Container.ExecResult result = container.executeShellCommand("ls -l / | grep test | awk '{ print $1 }'");
 
         assertEquals("rwxrwx---", result.getStdout().trim());
     }
@@ -58,7 +58,7 @@ public class GenericContainerEx_withTempDirectoryBindShould {
 
         container.start();
 
-        Container.ExecResult result = container.executeShellCommand("ls -l / | grep lib | awk '{ print $1 }'");
+        Container.ExecResult result = container.executeShellCommand("ls -l / | grep test | awk '{ print $1 }'");
 
         assertEquals("rwx------", result.getStdout().trim());
     }
@@ -71,7 +71,7 @@ public class GenericContainerEx_withTempDirectoryBindShould {
 
         container.start();
 
-        Container.ExecResult result = container.executeShellCommand("ls -l / | grep lib | awk '{ print $4 }'");
+        Container.ExecResult result = container.executeShellCommand("ls -l / | grep test | awk '{ print $4 }'");
 
         assertEquals(9001, result.getStdout().trim()); // Returns gid because the group does not exist in /etc/group
     }
