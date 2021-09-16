@@ -47,7 +47,7 @@ public class GenericContainerEx_withTempDirectoryBindShould {
 
         Container.ExecResult result = container.executeShellCommand("ls -l / | grep test | awk '{ print $1 }'");
 
-        assertEquals("rwxrwx---", result.getStdout().trim());
+        assertEquals("drwxrwx---", result.getStdout().trim());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class GenericContainerEx_withTempDirectoryBindShould {
 
         Container.ExecResult result = container.executeShellCommand("ls -l / | grep test | awk '{ print $1 }'");
 
-        assertEquals("rwx------", result.getStdout().trim());
+        assertEquals("drwx------", result.getStdout().trim());
     }
 
     @Test
