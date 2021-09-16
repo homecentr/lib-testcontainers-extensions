@@ -9,9 +9,7 @@ import org.testcontainers.containers.output.OutputFrame;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.shaded.org.apache.commons.lang.SystemUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -68,8 +66,32 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
         }
 
         System.out.println("Temp dir: " + dirPath.toAbsolutePath());
+        System.out.println(ls());
 
         return withFileSystemBind(dirPath.toAbsolutePath().toString(), containerPath, bindMode);
+    }
+
+    private String ls() {
+        String result = null;
+        try {
+            Runtime r = Runtime.getRuntime();
+
+            Process p = r.exec("ls -l /tmp");
+
+            BufferedReader in =
+                    new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                System.out.println(inputLine);
+                result += inputLine;
+            }
+            in.close();
+
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+        return result;
     }
 
     public Integer getProcessUid(String processName) throws IOException, InterruptedException, ProcessNotFoundException {
