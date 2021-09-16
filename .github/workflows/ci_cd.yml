@@ -30,7 +30,7 @@ jobs:
 
       - name: Gradle - publish to GitHub packages
         if: env.RELEASE_VERSION != ''
-        run: gradle publish
+        run: sudo gradle publish
         env:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
