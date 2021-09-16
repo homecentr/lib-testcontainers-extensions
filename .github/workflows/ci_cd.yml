@@ -26,7 +26,7 @@ jobs:
           GH_URL: "https://api.github.com"
 
       - name: Gradle - build & test
-        run: gradle build --info
+        run: sudo --preserve-env gradle build --info
 
       - name: Gradle - publish to GitHub packages
         if: env.RELEASE_VERSION != ''
