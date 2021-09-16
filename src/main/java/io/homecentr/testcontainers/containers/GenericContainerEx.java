@@ -7,13 +7,17 @@ import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.OutputFrame;
 import org.testcontainers.images.builder.ImageFromDockerfile;
+import org.testcontainers.shaded.org.apache.commons.lang.SystemUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.UUID;
 
 public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends GenericContainer<SELF> {
 
@@ -41,6 +45,25 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
         String fullHostPath = Paths.get(System.getProperty("user.dir"), relativePath).normalize().toString();
 
         return withFileSystemBind(fullHostPath, containerPath, bindMode);
+    }
+
+    public GenericContainerEx<SELF> withTempDirectoryBind(String containerPath, int dirGid) throws IOException {
+        return withTempDirectoryBind(containerPath, dirGid, "rwxrwx---");
+    }
+
+    public GenericContainerEx<SELF> withTempDirectoryBind(String containerPath, int dirGid, String permissions) throws IOException {
+        return withTempDirectoryBind(containerPath, dirGid, permissions, BindMode.READ_WRITE);
+    }
+
+    public GenericContainerEx<SELF> withTempDirectoryBind(String containerPath, int dirGid, String permissions, BindMode bindMode) throws IOException {
+        Path dirPath = Files.createTempDirectory(UUID.randomUUID().toString());
+
+        if(SystemUtils.IS_OS_LINUX){
+            Files.setAttribute(dirPath, "unix:gid", dirGid);
+            Files.setPosixFilePermissions(dirPath, PosixFilePermissions.fromString(permissions));
+        }
+
+        return withFileSystemBind(dirPath.toAbsolutePath().toString(), containerPath, bindMode);
     }
 
     public Integer getProcessUid(String processName) throws IOException, InterruptedException, ProcessNotFoundException {

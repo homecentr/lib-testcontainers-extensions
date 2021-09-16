@@ -19,5 +19,5 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
-      - name: Gradle - build
-        run: gradle build --info
+      - name: Gradle - build & test
+        run: sudo --preserve-env gradle build --info
