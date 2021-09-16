@@ -9,13 +9,15 @@ import org.testcontainers.containers.output.OutputFrame;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.shaded.org.apache.commons.lang.SystemUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.UUID;
 
@@ -59,39 +61,11 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
         Path dirPath = Files.createTempDirectory(UUID.randomUUID().toString());
 
         if(SystemUtils.IS_OS_LINUX){
-            System.out.println("=== IS LINUX");
-
             Files.setAttribute(dirPath, "unix:gid", dirGid);
             Files.setPosixFilePermissions(dirPath, PosixFilePermissions.fromString(permissions));
         }
 
-        System.out.println("Temp dir: " + dirPath.toAbsolutePath());
-        System.out.println(ls());
-
         return withFileSystemBind(dirPath.toAbsolutePath().toString(), containerPath, bindMode);
-    }
-
-    private String ls() {
-        String result = null;
-        try {
-            Runtime r = Runtime.getRuntime();
-
-            Process p = r.exec("ls -l /tmp");
-
-            BufferedReader in =
-                    new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                System.out.println(inputLine);
-                result += inputLine;
-            }
-            in.close();
-
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-
-        return result;
     }
 
     public Integer getProcessUid(String processName) throws IOException, InterruptedException, ProcessNotFoundException {
