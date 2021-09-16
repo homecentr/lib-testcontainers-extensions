@@ -61,9 +61,13 @@ public class GenericContainerEx<SELF extends GenericContainerEx<SELF>> extends G
         Path dirPath = Files.createTempDirectory(UUID.randomUUID().toString());
 
         if(SystemUtils.IS_OS_LINUX){
+            System.out.println("=== IS LINUX");
+
             Files.setAttribute(dirPath, "unix:gid", dirGid);
             Files.setPosixFilePermissions(dirPath, PosixFilePermissions.fromString(permissions));
         }
+
+        System.out.println("Temp dir: " + dirPath.toAbsolutePath());
 
         return withFileSystemBind(dirPath.toAbsolutePath().toString(), containerPath, bindMode);
     }
