@@ -1,4 +1,4 @@
-package io.homecentr.testcontainers.containers.helpers;
+package io.homecentr.testcontainers.containers;
 
 import io.homecentr.testcontainers.containers.GenericContainerEx;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotEquals;
 public class GenericContainerEx_withTempDirectoryBindShould {
     @Test
     public void mountDirectoryAsReadWriteByDefault() throws IOException, InterruptedException {
-        GenericContainerEx container = new GenericContainerEx<>("alpine")
+        GenericContainerEx container = new GenericContainerEx<>("centos")
                 .withTempDirectoryBind("/test", 9001)
                 .withCommand("bash", "-c", "sleep 100s");
 
@@ -26,7 +26,7 @@ public class GenericContainerEx_withTempDirectoryBindShould {
 
     @Test
     public void mountDirectoryAsReadOnlyWhenSpecified() throws IOException, InterruptedException {
-        GenericContainerEx container = new GenericContainerEx<>("alpine")
+        GenericContainerEx container = new GenericContainerEx<>("centos")
                 .withTempDirectoryBind("/test", 9001, "rwxrwxrwx", BindMode.READ_ONLY)
                 .withCommand("bash", "-c", "sleep 100s");
 
@@ -39,7 +39,7 @@ public class GenericContainerEx_withTempDirectoryBindShould {
 
     @Test
     public void createDirectoryWithDefaultPermissions() throws IOException, InterruptedException {
-        GenericContainerEx container = new GenericContainerEx<>("alpine")
+        GenericContainerEx container = new GenericContainerEx<>("centos")
                 .withTempDirectoryBind("/test", 9001)
                 .withCommand("bash", "-c", "sleep 100s");
 
@@ -52,7 +52,7 @@ public class GenericContainerEx_withTempDirectoryBindShould {
 
     @Test
     public void createDirectoryWithPassedPermissions() throws IOException, InterruptedException {
-        GenericContainerEx container = new GenericContainerEx<>("alpine")
+        GenericContainerEx container = new GenericContainerEx<>("centos")
                 .withTempDirectoryBind("/test", 9001, "rwx------")
                 .withCommand("bash", "-c", "sleep 100s");
 
@@ -65,7 +65,7 @@ public class GenericContainerEx_withTempDirectoryBindShould {
 
     @Test
     public void createDirectoryWithPassedGroupOwner() throws IOException, InterruptedException {
-        GenericContainerEx container = new GenericContainerEx<>("alpine")
+        GenericContainerEx container = new GenericContainerEx<>("centos")
                 .withTempDirectoryBind("/test", 9001)
                 .withCommand("bash", "-c", "sleep 100s");
 
