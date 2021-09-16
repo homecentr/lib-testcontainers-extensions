@@ -73,6 +73,6 @@ public class GenericContainerEx_withTempDirectoryBindShould {
 
         Container.ExecResult result = container.executeShellCommand("ls -l / | grep test | awk '{ print $4 }'");
 
-        assertEquals(9001, result.getStdout().trim()); // Returns gid because the group does not exist in /etc/group
+        assertEquals("9001", result.getStdout().trim()); // Returns gid because the group does not exist in /etc/group
     }
 }
